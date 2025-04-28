@@ -7,7 +7,7 @@ import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite.js";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
-const ACCESS_TOKEN = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 function App() {
   const [SearchItem, setSearchItem] = useState("");
@@ -24,21 +24,20 @@ function App() {
     setErrorMessage("");
 
     try {
-      if (!ACCESS_TOKEN) {
-        throw new Error(
-          "Access Token missing! Please check environment variables."
-        );
+      if (!API_KEY) {
+        throw new Error("API Key missing! Please check environment variables.");
       }
 
       const endpoint = query
-        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+        ? `${API_BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(
+            query
+          )}&language=en-US`
+        : `${API_BASE_URL}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&language=en-US`;
 
       const response = await fetch(endpoint, {
         method: "GET",
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${ACCESS_TOKEN}`,
         },
       });
 
